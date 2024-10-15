@@ -22,42 +22,57 @@ const listingSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    bathrooms: {
+    lounge: {
       type: Number,
       required: true,
     },
     bedrooms: {
-      type: Number,
-      required: true,
-    },
-    furnished: {
-      type: Boolean,
+      type: String, // Or change to Number based on your needs
       required: true,
     },
     parking: {
       type: Boolean,
-      required: true,
     },
-    type: {
+    pool: {
+      type: Boolean,
+    },
+    garden: {
+      type: Boolean,
+    },
+    gym: {
+      type: Boolean,
+    },
+    balcony: {
+      type: Boolean,
+    },
+    gatedCommunity: {
+      type: Boolean,
+    },
+    securityServices: {
+      type: Boolean,
+    },
+    conciergeServices: {
+      type: Boolean,
+    },
+    propertyAge: {
       type: String,
       required: true,
     },
-    offer: {
-      type: Boolean,
+    propertyCondition: {
+      type: String,
       required: true,
     },
     imageUrls: {
-      type: Array,
+      type: [String], // Stores multiple image URLs
       required: true,
     },
     userRef: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
   },
   { timestamps: true }
 );
 
-const Listing = mongoose.model('Listing', listingSchema);
-
-export default Listing;
+export default mongoose.model('Listing', listingSchema);
