@@ -113,21 +113,21 @@ export default function Profile() {
     }
   };
 
-  const handleSignOut = async  () => {
-
+  const handleSignOut = async () => {
     try {
-      dispatch(signOutUserStart())
-      const res = await fetch(`/api/auth/signout`);
+      dispatch(signOutUserStart());
+      const res = await fetch('/api/auth/signout');
       const data = await res.json();
       if (data.success === false) {
-        dispatch(signOutUserFailure(data.message));
+        dispatch(deleteUserFailure(data.message));
         return;
       }
-      dispatch(signOutUserSuccess(data));
+      dispatch(deleteUserSuccess(data));
     } catch (error) {
       dispatch(deleteUserFailure(data.message));
     }
-  }
+  };
+
 
   const handleShowListings = async () => {
     try {
