@@ -14,6 +14,8 @@ export default function CreateListing() {
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
+    listingType: '',
+    listingSubType: '',
     name: '',
     description: '',
     address: '',
@@ -87,9 +89,6 @@ export default function CreateListing() {
     'More than 20 years',
   ];
 
-  const [listingType, setListingType] = useState('');
-  const [subtype, setSubtype] = useState('');
-
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
@@ -145,12 +144,23 @@ export default function CreateListing() {
 
 
   const handleListingTypeChange = (e) => {
-    setListingType(e.target.value);
-    setSubtype('');
+    setFormData({
+      ...formData,
+      listingType: e.target.value,
+      listingSubType: ''
+    })
+    
+ 
   };
 
   const handleSubtypeChange = (e) => {
-    setSubtype(e.target.value);
+ 
+
+    setFormData({
+      ...formData,
+      listingSubType: e.target.value
+    })
+
   };
 
  
@@ -212,16 +222,31 @@ export default function CreateListing() {
   };
 
 
+  const subTypeOptions = ( ) => {
+    if(formData.listingType === 'Residential') return residentialSubtypes
+    if(formData.listingType === 'Commercial') return commercialSubtypes
+    if(formData.listingType === 'Land') return landSubtypes
+    if(formData.listingType === 'Rental' )return rentalSubtypes
+    return []
+  }
+
+
   return (
     <main className='p-3 max-w-4xl mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Create Listing</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <div className='flex flex-col gap-4 flex-1'>
-          <label htmlFor='listingType'>Select Listing Type:</label>
+          <label htmlFor='listingType'>Select Listing Type:
+          {formData.listingType}
+          {formData.listingType ? "true":"false"}--
+          -- {formData.listingSubType}
+ 
+
+          </label>
           <select
             id='listingType'
             className='border p-3 rounded-lg'
-            value={listingType}
+            value={formData.listingType}
             onChange={handleListingTypeChange}
             required
           >
@@ -234,44 +259,36 @@ export default function CreateListing() {
           </select>
         </div>
 
-        {listingType && (
+        
+            
+            
+
+        {formData.listingType && (
           <div className='flex flex-col gap-4 flex-1'>
             <label htmlFor='subtype'>Select Subtype:</label>
             <select
               id='subtype'
               className='border p-3 rounded-lg'
-              value={subtype}
+              value={formData.listingSubType}
               onChange={handleSubtypeChange}
               required
             >
               <option value=''>Choose a subtype</option>
-              {listingType === 'Residential' && residentialSubtypes.map((subtype) => (
-                <option key={subtype} value={subtype}>
-                  {subtype}
-                </option>
-              ))}
-              {listingType === 'Commercial' && commercialSubtypes.map((subtype) => (
-                <option key={subtype} value={subtype}>
-                  {subtype}
-                </option>
-              ))}
-              {listingType === 'Land' && landSubtypes.map((subtype) => (
-                <option key={subtype} value={subtype}>
-                  {subtype}
-                </option>
-              ))}
-              {listingType === 'Rental' && rentalSubtypes.map((subtype) => (
-                <option key={subtype} value={subtype}>
-                  {subtype}
-                </option>
-              ))}
+            {
+              subTypeOptions().map((item, i)=>(
+                <option key={i} value={item} >
+              {item}
+              </option>
+              ))
+            }
             </select>
           </div>
         )}
 
-        {subtype && ( 
+        {    formData.listingSubType
+ && ( 
           <>
-            <h2 className='text-lg font-semibold mt-4'>Details for {subtype}</h2>
+            <h2 className='text-lg font-semibold mt-4'>Details for {formData.listingSubType}</h2>
             <input
               type='text'
               placeholder='Property Name'
@@ -334,7 +351,8 @@ export default function CreateListing() {
           </>
         )}
 
-        {subtype && (
+        {    formData.listingSubType
+ && (
           <>
             <label htmlFor='propertyAge'>Property Age/Year Built:</label>
             <select

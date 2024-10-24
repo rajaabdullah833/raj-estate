@@ -2,7 +2,13 @@ import mongoose from 'mongoose';
 
 const listingSchema = new mongoose.Schema(
   {
-    name: {
+    listingType: {
+      type: String,
+      required: true,
+    }, listingSubType: {
+      type: String,
+      required: true,
+    }, name: {
       type: String,
       required: true,
     },
@@ -27,7 +33,7 @@ const listingSchema = new mongoose.Schema(
       required: true,
     },
     bedrooms: {
-      type: String, // Or change to Number based on your needs
+      type: String, 
       required: true,
     },
     parking: {
