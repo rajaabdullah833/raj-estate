@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getDownloadURL,
   getStorage,
@@ -14,29 +14,6 @@ export default function CreateListing() {
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
-    listingType: '',
-    listingSubType: '',
-    name: '',
-    description: '',
-    address: '',
-    size: '',
-    propertyAge: '',
-    propertyCondition: '',
-    bedrooms: '',
-    lounge: '',
-    regularPrice: '',
-    discountPrice: '',
-    imageUrls: [],
-    amenities: {
-      pool: false,
-      parking: false,
-      garden: false,
-      gym: false,
-      balcony: false,
-      gatedCommunity: false,
-      securityServices: false,
-      conciergeServices: false,
-    },
   });
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -44,12 +21,7 @@ export default function CreateListing() {
   const [loading, setLoading] = useState(false);
   console.log(formData);
 
-  const listingTypes = [
-    { value: 'Residential', label: 'Residential Listings' },
-    { value: 'Commercial', label: 'Commercial Listings' },
-    { value: 'Land', label: 'Land Listings' },
-    { value: 'Rental', label: 'Rental Listings' },
-  ];
+  
 
   const residentialSubtypes = [
     'Houses',
@@ -88,6 +60,13 @@ export default function CreateListing() {
     '11-20 years',
     'More than 20 years',
   ];
+
+  useEffect(()=>{
+
+    res = ""; // get ki api, aik id k through
+    setFormData(res.data)
+
+  }, [])
 
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -143,15 +122,7 @@ export default function CreateListing() {
   };
 
 
-  const handleListingTypeChange = (e) => {
-    setFormData({
-      ...formData,
-      listingType: e.target.value,
-      listingSubType: ''
-    })
-    
  
-  };
 
   const handleSubtypeChange = (e) => {
  
@@ -180,7 +151,7 @@ export default function CreateListing() {
         return setError('Discount price must be lower than regular price');
       setLoading(true);
       setError(false);
-      const res = await fetch('/api/listing/create', {
+      const res = await fetch(`/api/listing/update/${params.listingId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -233,31 +204,12 @@ export default function CreateListing() {
 
   return (
     <main className='p-3 max-w-4xl mx-auto'>
-      <h1 className='text-3xl font-semibold text-center my-7'>Create Listing</h1>
+      <h1 className='text-3xl font-semibold text-center my-7'>Update Listing</h1>
+      <div className="mb-5">
+      <span>Listing Type: </span>
+      <span>{formData.listingType} </span>
+      </div>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-        <div className='flex flex-col gap-4 flex-1'>
-          <label htmlFor='listingType'>Select Listing Type:
-          </label>
-          <select
-            id='listingType'
-            className='border p-3 rounded-lg'
-            value={formData.listingType}
-            onChange={handleListingTypeChange}
-            required
-          >
-            <option value=''>Choose a type</option>
-            {listingTypes.map((type) => (
-              <option key={type.value} value={type.value}>
-                {type.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        
-            
-            
-
         {formData.listingType && (
           <div className='flex flex-col gap-4 flex-1'>
             <label htmlFor='subtype'>Select Subtype:</label>
@@ -461,10 +413,11 @@ export default function CreateListing() {
             ))}
             </div>            
             <button
+            type='submit'
             disabled={loading || uploading}
             className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
           >
-            {loading ? 'Creating...' : 'Create listing'}
+            {loading ? 'Saving...' : 'Update listing'}
           </button>
           {error && <p className='text-red-700 text-sm'>{error}</p>}
           </>

@@ -34,7 +34,7 @@ export const createListing = async (req, res, next) => {
         return next(errorHandler(404, 'Listing not found!'));
       }
   
-      if (req.user.id !== listing.userRef.toString()) {
+      if (!req.user || req.user.id !== listing.userRef.toString()) {
         return next(errorHandler(401, 'You can only update your own listings!'));
       }
   
@@ -45,10 +45,9 @@ export const createListing = async (req, res, next) => {
       );
       res.status(200).json(updatedListing);
     } catch (error) {
-      if (error.name === 'CastError') {
-        return next(errorHandler(400, 'Invalid Listing ID!'));
-      }
       next(error);
     }
   };
+  
+  
   
